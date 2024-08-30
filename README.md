@@ -1,0 +1,7 @@
+# BILL SPLITTING
+
+>
+
+# BUILT WITH
+
+- Rust
