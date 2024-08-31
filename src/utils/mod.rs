@@ -4,10 +4,70 @@ pub mod helpers {
     pub fn handle_split(contributors: Vec<Contributor>, bill_to_split: &f64) -> Vec<Contributor> {
         let mut results = vec![];
         for mut c in contributors {
-            let amount_to_pay = ((c.percentage as f64 / 100.0) * bill_to_split).round();
+            let amount_to_pay = (c.percentage as f64 / 100.0) * bill_to_split;
             c.amount_contributed = amount_to_pay;
             results.push(c);
         }
         results
+    }
+}
+
+pub mod prompt {
+    use crate::structs::Contributor;
+    use crate::structs::User;
+    use std::io;
+
+    pub fn prompt_user(s: &mut String, err_msg: &str) {
+        io::stdin().read_line(s).expect(err_msg);
+    }
+
+    pub fn enter_user_mode(contributors: &mut Vec<Contributor>) {
+        println!("Kindly add atleast 2 users to split bill");
+        println!("Kindly enter 2 to exit adding users");
+        loop {
+            let mut name = String::new();
+            let mut percentage = String::new();
+            let mut keep_mode = String::new();
+            let user = User {
+                name: String::new(),
+            };
+            let mut contributor = Contributor {
+                user,
+                percentage: 0.0,
+                amount_contributed: 0.0,
+            };
+
+            println!("Kindly enter name of the user");
+            prompt_user(&mut name, "Kindly enter a name");
+
+            contributor.user.name = name.trim().into();
+
+            println!("Kindly enter percentage contribution");
+            prompt_user(&mut percentage, "Kindly enter a percentage");
+
+            let value: f32 = percentage.trim().parse().unwrap();
+            contributor.percentage = value;
+
+            self::add_contributor(contributor, contributors);
+
+            if contributors.len() >= 2 {
+                println!("Do you want to continue");
+                prompt_user(&mut keep_mode, "Keep editing");
+
+                let trim_keep_mode = keep_mode.trim();
+
+                if trim_keep_mode == "y" || trim_keep_mode == "yes" {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+        }
+    }
+
+    pub fn enter_amount_mode() {}
+
+    fn add_contributor(contributor: Contributor, contributors: &mut Vec<Contributor>) {
+        contributors.push(contributor)
     }
 }

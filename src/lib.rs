@@ -1,37 +1,58 @@
+use std::io;
 mod structs;
 mod utils;
-use structs::Contributor;
-use structs::User;
 
 pub fn run() {
-    let user_1 = User {
-        name: "wale".into(),
-    };
-    let user_2 = User {
-        name: "sola".into(),
-    };
+    let mut contributors = vec![];
+    let mut amount_parse: f64 = 0.0;
 
-    let contributor_1 = Contributor {
-        user: user_1,
-        percentage: 32,
-        amount_contributed: 0.0,
-    };
-    let contributor_2 = Contributor {
-        user: user_2,
-        percentage: 68,
-        amount_contributed: 0.0,
-    };
+    println!("This is bill splitting app");
+    println!("Enter 1 to add users");
+    println!("Enter 2 to add amout to be splitted by users");
+    println!("Enter q, quit or exit to exit the application or CTRL+C, ctrl+c");
 
-    let contributors = vec![contributor_1, contributor_2];
+    'l: loop {
+        let mut mode = String::new();
 
-    let bill_to_split: f64 = 1200.00;
+        println!("Kindly enter number 1 or 2 to add users or bill");
+        io::stdin()
+            .read_line(&mut mode)
+            .expect("Kindly enter a mode");
 
-    let contributors = utils::helpers::handle_split(contributors, &bill_to_split);
+        let trim_mode = mode.trim();
 
+        if trim_mode == "q" || trim_mode == "quit" || trim_mode == "exit" {
+            break 'l;
+        }
+
+        let value: i8 = match trim_mode.parse() {
+            Ok(num) => num,
+            Err(_) => continue 'l,
+        };
+
+        if value == 1 {
+            utils::prompt::enter_user_mode(&mut contributors);
+        } else if value == 2 {
+            println!("Add amount to be splitted");
+            let mut amount = String::new();
+            utils::prompt::prompt_user(&mut amount, "Kindly enter a amount");
+
+            amount_parse = amount.trim().parse().unwrap();
+
+            if amount_parse > 0.0 {
+                break;
+            } else {
+                println!("Enter amount greater than 0 ")
+            }
+        } else {
+            continue 'l;
+        }
+    }
+    let contributors = utils::helpers::handle_split(contributors, &amount_parse);
     for c in contributors {
         println!(
             "{} will contribute {} out of {}",
-            c.user.name, c.amount_contributed, bill_to_split
+            c.user.name, c.amount_contributed, amount_parse
         )
     }
 }
