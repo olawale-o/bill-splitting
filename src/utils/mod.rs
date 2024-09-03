@@ -91,25 +91,31 @@ pub mod prompt {
 
             self::add_contributor(contributor, contributors);
 
-            if contributors.len() >= 2 {
-                println!("Do you want to continue");
-                prompt_user(&mut keep_mode, "Keep editing");
+            if percentage_left > 0f32 {
+                println!("% left is {percentage_left}");
+                if contributors.len() >= 2 {
+                    println!("Do you want to continue");
+                    prompt_user(&mut keep_mode, "Keep editing");
 
-                let trim_keep_mode = keep_mode.trim();
+                    let trim_keep_mode = keep_mode.trim();
 
-                if trim_keep_mode == "y" || trim_keep_mode == "yes" {
-                    continue;
-                } else {
-                    if percentage_left > 0.0 {
-                        println!(
-                            "You still have {}% of the bill to be splitted",
-                            percentage_left
-                        );
-                        process::exit(1)
+                    if trim_keep_mode == "y" || trim_keep_mode == "yes" {
+                        continue;
+                    } else {
+                        if percentage_left > 0.0 {
+                            println!(
+                                "You still have {}% of the bill to be splitted",
+                                percentage_left
+                            );
+                            process::exit(1)
+                        }
+                        break;
                     }
-                    break;
                 }
+            } else {
+                break;
             }
+
             contributor_count += 1;
         }
     }
