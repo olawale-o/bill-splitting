@@ -73,3 +73,53 @@ pub mod prompt {
         contributors.push(contributor)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::structs::{Contributor, User};
+
+    use super::bill;
+
+    #[test]
+    fn handle_split() {
+        let contributors = vec![
+            Contributor {
+                user: User {
+                    name: "wale".into(),
+                },
+                percentage: 20f32,
+                amount_contributed: 0.0,
+            },
+            Contributor {
+                user: User {
+                    name: "sola".into(),
+                },
+                percentage: 80f32,
+                amount_contributed: 0.0,
+            },
+        ];
+        let amount_to_split = 2000f64;
+
+        let result = bill::handle_split(contributors, &amount_to_split);
+
+        let expect = vec![
+            Contributor {
+                user: User {
+                    name: "wale".into(),
+                },
+                percentage: 20f32,
+                amount_contributed: 400f64,
+            },
+            Contributor {
+                user: User {
+                    name: "sola".into(),
+                },
+                percentage: 80f32,
+                amount_contributed: 1600f64,
+            },
+        ];
+
+        assert_eq!(result[0].amount_contributed, expect[0].amount_contributed);
+        assert_eq!(result[1].amount_contributed, expect[1].amount_contributed);
+    }
+}
