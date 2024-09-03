@@ -72,19 +72,19 @@ pub mod prompt {
                 }
             }
 
-            // if value > percentage_left {
-            //     loop {
-            //         println!("Kindly enter percentage contribution less than or equal to {percentage_left}");
-            //         prompt_user(&mut percentage, "Kindly enter a percentage");
-            //         value = percentage.trim().parse().unwrap();
+            if value > percentage_left {
+                loop {
+                    println!("Kindly enter percentage contribution less than or equal to {percentage_left}");
+                    prompt_user(&mut percentage, "Kindly enter a percentage");
+                    value = percentage.trim().parse().unwrap();
 
-            //         if value <= percentage_left {
-            //             break;
-            //         }
+                    if value <= percentage_left {
+                        break;
+                    }
 
-            //         percentage = String::new();
-            //     }
-            // }
+                    percentage = String::new();
+                }
+            }
             contributor.percentage = value;
 
             percentage_left -= value;
