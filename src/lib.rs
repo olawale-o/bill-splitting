@@ -6,9 +6,9 @@ pub fn run() {
     let mut contributors = vec![];
     let mut amount_parse: f64 = 0.0;
 
-    println!("This is bill splitting app");
+    println!("This is a bill splitting app");
     println!("Enter 1 to add users");
-    println!("Enter 2 to add amout to be splitted by users");
+    println!("Enter 2 to add amount to be splitted among users");
     println!("Enter q, quit or exit to exit the application or CTRL+C, ctrl+c");
 
     'l: loop {
