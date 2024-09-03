@@ -26,6 +26,7 @@ pub mod prompt {
     }
 
     pub fn enter_user_mode(contributors: &mut Vec<Contributor>) {
+        let mut contributor_count = 1;
         let mut percentage_left = 100f32;
         println!("Kindly add atleast 2 users to split bill");
         println!("Kindly enter 2 to exit adding users");
@@ -50,7 +51,40 @@ pub mod prompt {
             println!("Kindly enter percentage contribution");
             prompt_user(&mut percentage, "Kindly enter a percentage");
 
-            let value: f32 = percentage.trim().parse().unwrap();
+            let mut value: f32 = percentage.trim().parse().unwrap();
+            percentage.clear();
+
+            if contributor_count == 1 {
+                if value == percentage_left {
+                    loop {
+                        println!("Kindly enter percentage contribution less than {percentage_left} since you are the first contributor");
+                        prompt_user(&mut percentage, "Kindly enter a percentage");
+                        value = percentage
+                            .trim()
+                            .parse()
+                            .unwrap_or_else(|err| panic!("{err}"));
+
+                        if value < percentage_left {
+                            break;
+                        }
+                        percentage = String::new();
+                    }
+                }
+            }
+
+            // if value > percentage_left {
+            //     loop {
+            //         println!("Kindly enter percentage contribution less than or equal to {percentage_left}");
+            //         prompt_user(&mut percentage, "Kindly enter a percentage");
+            //         value = percentage.trim().parse().unwrap();
+
+            //         if value <= percentage_left {
+            //             break;
+            //         }
+
+            //         percentage = String::new();
+            //     }
+            // }
             contributor.percentage = value;
 
             percentage_left -= value;
@@ -66,7 +100,6 @@ pub mod prompt {
                 if trim_keep_mode == "y" || trim_keep_mode == "yes" {
                     continue;
                 } else {
-                    println!("{percentage_left}");
                     if percentage_left > 0.0 {
                         println!(
                             "You still have {}% of the bill to be splitted",
@@ -77,6 +110,7 @@ pub mod prompt {
                     break;
                 }
             }
+            contributor_count += 1;
         }
     }
 
