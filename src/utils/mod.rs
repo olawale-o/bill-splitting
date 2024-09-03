@@ -1,3 +1,4 @@
+use std::process;
 pub mod bill {
     use crate::structs::Contributor;
 
@@ -18,12 +19,14 @@ pub mod prompt {
     use crate::structs::Contributor;
     use crate::structs::User;
     use std::io;
+    use std::process;
 
     pub fn prompt_user(s: &mut String, err_msg: &str) {
         io::stdin().read_line(s).expect(err_msg);
     }
 
     pub fn enter_user_mode(contributors: &mut Vec<Contributor>) {
+        let mut percentage_left = 100f32;
         println!("Kindly add atleast 2 users to split bill");
         println!("Kindly enter 2 to exit adding users");
         loop {
@@ -50,6 +53,8 @@ pub mod prompt {
             let value: f32 = percentage.trim().parse().unwrap();
             contributor.percentage = value;
 
+            percentage_left -= value;
+
             self::add_contributor(contributor, contributors);
 
             if contributors.len() >= 2 {
@@ -61,6 +66,14 @@ pub mod prompt {
                 if trim_keep_mode == "y" || trim_keep_mode == "yes" {
                     continue;
                 } else {
+                    println!("{percentage_left}");
+                    if percentage_left > 0.0 {
+                        println!(
+                            "You still have {}% of the bill to be splitted",
+                            percentage_left
+                        );
+                        process::exit(1)
+                    }
                     break;
                 }
             }
