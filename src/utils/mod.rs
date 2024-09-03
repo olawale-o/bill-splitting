@@ -1,4 +1,4 @@
-pub mod helpers {
+pub mod bill {
     use crate::structs::Contributor;
 
     pub fn handle_split(contributors: Vec<Contributor>, bill_to_split: &f64) -> Vec<Contributor> {

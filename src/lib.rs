@@ -48,11 +48,11 @@ pub fn run() {
             continue 'l;
         }
     }
-    let contributors = utils::helpers::handle_split(contributors, &amount_parse);
-    for c in contributors {
+    let contributors = utils::bill::handle_split(contributors, &amount_parse);
+    contributors.iter().for_each(|c| {
         println!(
             "{} will contribute {} out of {}",
             c.user.name, c.amount_contributed, amount_parse
         )
-    }
+    });
 }
