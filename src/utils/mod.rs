@@ -61,8 +61,7 @@ pub mod prompt {
                         prompt_user(&mut percentage, "Kindly enter a percentage");
                         value = percentage
                             .trim()
-                            .parse()
-                            .unwrap_or_else(|err| panic!("{err}"));
+                            .parse().unwrap();
 
                         if value < percentage_left {
                             break;
@@ -92,7 +91,6 @@ pub mod prompt {
             self::add_contributor(contributor, contributors);
 
             if percentage_left > 0f32 {
-                println!("% left is {percentage_left}");
                 if contributor_count >= 2 {
                     println!("Do you want to continue");
                     prompt_user(&mut keep_mode, "Keep editing");
