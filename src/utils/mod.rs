@@ -25,11 +25,11 @@ pub mod prompt {
         io::stdin().read_line(s).expect(err_msg);
     }
 
-    pub fn enter_user_mode(contributors: &mut Vec<Contributor>) {
+    pub fn enter_user_mode(contributors: &mut Vec<Contributor>) -> f64 {
         let mut contributor_count = 1;
         let mut percentage_left = 100f32;
+        let mut amount_parse: f64 = 0.0;
         println!("Kindly add atleast 2 users to split bill");
-        println!("Kindly enter 2 to exit adding users");
         loop {
             let mut name = String::new();
             let mut percentage = String::new();
@@ -93,7 +93,7 @@ pub mod prompt {
 
             if percentage_left > 0f32 {
                 println!("% left is {percentage_left}");
-                if contributors.len() >= 2 {
+                if contributor_count >= 2 {
                     println!("Do you want to continue");
                     prompt_user(&mut keep_mode, "Keep editing");
 
@@ -113,14 +113,26 @@ pub mod prompt {
                     }
                 }
             } else {
-                break;
+                amount_parse = enter_amount_mode();
+
+                if amount_parse > 0.0 {
+                    break;
+                } else {
+                    println!("Enter amount greater than 0 ")
+                }
             }
 
             contributor_count += 1;
         }
+        amount_parse
     }
 
-    pub fn enter_amount_mode() {}
+    pub fn enter_amount_mode() -> f64 {
+        println!("Add amount to be splitted");
+        let mut amount = String::new();
+        prompt_user(&mut amount, "Kindly enter a amount");
+        amount.trim().parse().unwrap()
+    }
 
     fn add_contributor(contributor: Contributor, contributors: &mut Vec<Contributor>) {
         contributors.push(contributor)
